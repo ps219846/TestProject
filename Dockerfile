@@ -1,7 +1,7 @@
 #docker file for laravel php 8.1
 FROM php:8.1-apache
 
-Install dependencies
+#Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -29,13 +29,13 @@ RUN apt-get update && apt-get install -y \
 Clear cache \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-Install extensions
+#Install extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
-Install composer
+#Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-Set working directory
+#Set working directory
 WORKDIR /var/www/html
 
 Copy existing application directory permissions
