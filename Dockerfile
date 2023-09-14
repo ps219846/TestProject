@@ -46,5 +46,5 @@ RUN php artisan key:generate
 RUN npm install
 RUN npm run build
 RUN a2enmod rewrite
-open on port 8000
+#open on port 8000
 EXPOSE 80
