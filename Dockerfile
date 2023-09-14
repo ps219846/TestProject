@@ -35,4 +35,6 @@ RUN mkdir -p /home/$user/.composer && \
 # Set working directory
 WORKDIR /var/www
 
+RUN a2enmod rewrite
+
 USER $user
