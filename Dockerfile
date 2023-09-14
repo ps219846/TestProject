@@ -1,40 +1,50 @@
+#docker file for laravel php 8.1
 FROM php:8.1-apache
 
-# Arguments defined in docker-compose.yml
-ARG user
-ARG uid
-
-# Install system dependencies
+Install dependencies
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    locales \
+    libzip-dev \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
     git \
     curl \
-    libpng-dev \
+    libpq-dev \
     libonig-dev \
+    libxml2 \
     libxml2-dev \
-    zip \
-    unzip
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libpng-dev \
+    libjpeg-dev \
+    nodejs\
+    npm
 
-# Clear cache
+Clear cache \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+Install extensions
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Standaardwaarden instellen als ze niet zijn opgegeven via Docker Compose
-ARG user=defaultuser
-ARG uid=1000
+Set working directory
+WORKDIR /var/www/html
 
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+Copy existing application directory permissions
+COPY --chown=www-data:www-data . /var/www/html
 
-# Set working directory
-WORKDIR /var/www
-
+RUN composer install
+RUN php artisan key:generate
+RUN npm install
+RUN npm run build
 RUN a2enmod rewrite
-
-USER $user
+open on port 8000
+EXPOSE 80
