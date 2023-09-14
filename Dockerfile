@@ -38,7 +38,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 #Set working directory
 WORKDIR /var/www/html
 
-Copy existing application directory permissions
+#Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www/html
 
 RUN composer install
