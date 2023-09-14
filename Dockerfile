@@ -42,7 +42,6 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . /var/www/html
 
 RUN composer install
-RUN php artisan key:generate
 RUN npm install
 RUN npm run build
 RUN a2enmod rewrite
